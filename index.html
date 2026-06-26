@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0F1F3D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Reporte Diario · EL TIO</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#ffffff;--bg2:#f8fafc;--bg3:#f1f5f9;
+  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --blue:#1D5FA6;--teal:#0D9488;--gold:#F59E0B;
+  --green:#16A34A;--red:#DC2626;--orange:#EA580C;--purple:#7C3AED;
+  --radius:10px;--radius-sm:7px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1e2535;--bg2:#151c2c;--bg3:#111827;
+    --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;
+    --border:#2d3748;--border2:#374151;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);font-size:14px;min-height:100vh}
+.app{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh;display:flex;flex-direction:column}
+.header{background:var(--blue);color:#fff;padding:14px 16px 0;position:sticky;top:0;z-index:100}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.brand-name{font-size:15px;font-weight:600;color:#fff}
+.brand-sub{font-size:11px;color:rgba(255,255,255,.7)}
+.user-btn{background:rgba(255,255,255,.15);border:none;border-radius:20px;padding:5px 12px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px}
+.tabs{display:flex;overflow-x:auto;gap:0;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:8px 14px;font-size:12px;color:rgba(255,255,255,.7);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.tab.on{color:#fff;border-bottom-color:var(--gold);font-weight:600}
+.content{flex:1;padding:16px;overflow-y:auto}
+.sec-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin:18px 0 8px;display:flex;align-items:center;gap:5px}
+.sec-label:first-child{margin-top:0}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.card-hdr{display:flex;align-items:center;gap:7px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.card-hdr i{font-size:18px}
+.card-ttl{font-size:13px;font-weight:600;color:var(--text)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.fl{font-size:11px;color:var(--text2);margin-bottom:4px;margin-top:10px}
+.fl:first-of-type{margin-top:0}
+.inp{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;background:var(--bg);color:var(--text);outline:none;transition:border .15s}
+.inp:focus{border-color:var(--blue)}
+.inp-num{text-align:center;font-size:18px;font-weight:600;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);width:100%;background:var(--bg2);color:var(--text)}
+.inp-sm{width:65px;text-align:center;font-size:12px;padding:6px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg2);color:var(--text)}
+.inp-meta{width:55px;text-align:center;font-size:11px;padding:5px;border:1px dashed var(--border2);border-radius:var(--radius-sm);background:var(--bg3);color:var(--text3)}
+.sel{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;background:var(--bg);color:var(--text)}
+.sel-sm{padding:5px 7px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:11px;background:var(--bg2);color:var(--text);width:80px}
+.mrow{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.mrow label{font-size:11px;color:var(--text2);flex:1}
+.col-hdr{display:flex;gap:6px;margin-bottom:4px}
+.col-hdr span{font-size:10px;color:var(--text3);text-align:center}
+.urow{display:flex;align-items:center;gap:6px}
+.urow .inp{flex:1}
+.unit{font-size:11px;color:var(--text3)}
+.totbar{background:var(--bg2);border-radius:var(--radius-sm);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border:1px solid var(--border)}
+.vis-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.vis-row label{font-size:11px;color:var(--text2);flex:1}
+.vis-row .inp-sm{width:60px}
+.chk-grid{display:grid;grid-template-columns:1fr 1fr}
+.chk-lbl{display:flex;align-items:center;gap:7px;padding:8px;border-bottom:1px solid var(--border);font-size:11px;color:var(--text2);cursor:pointer}
+.chk-lbl:nth-child(n+9){border-bottom:none}
+.chk-lbl input{width:16px;height:16px;accent-color:var(--blue);flex-shrink:0}
+.obs{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;resize:vertical;min-height:64px;background:var(--bg);color:var(--text)}
+.btn{width:100%;padding:13px;font-size:14px;font-weight:600;border-radius:var(--radius);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:8px;transition:opacity .15s}
+.btn:active{opacity:.85}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-sm{padding:9px 16px;font-size:12px;font-weight:600;border-radius:var(--radius-sm);border:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.btn-sm-blue{background:var(--blue);color:#fff}
+.btn-sm-out{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.score-wrap{background:linear-gradient(135deg,var(--blue),#0D3B6E);border-radius:var(--radius);padding:20px;color:#fff;margin-bottom:12px;text-align:center}
+.score-num{font-size:56px;font-weight:700;line-height:1}
+.score-lbl{font-size:13px;color:rgba(255,255,255,.75);margin-top:4px}
+.score-bar-track{height:8px;background:rgba(255,255,255,.2);border-radius:4px;margin:14px 0 8px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:4px;background:var(--gold);transition:width .5s ease}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.metric{background:var(--bg2);border-radius:var(--radius-sm);padding:10px 8px;text-align:center;border:1px solid var(--border)}
+.metric-lbl{font-size:10px;color:var(--text3);margin-bottom:3px}
+.metric-val{font-size:18px;font-weight:700;color:var(--text)}
+.metric-sub{font-size:9px;color:var(--text3)}
+.krow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px}
+.krow:last-child{border-bottom:none}
+.kname{color:var(--text2);flex:1}
+.kdet{font-size:10px;color:var(--text3);margin-top:2px}
+.kval{font-weight:600;color:var(--text)}
+.pill{font-size:10px;padding:2px 7px;border-radius:20px;margin-left:5px;font-weight:600}
+.pg{background:#dcfce7;color:#166534}
+.pa{background:#fef3c7;color:#92400e}
+.pr{background:#fee2e2;color:#991b1b}
+.msg{border-radius:var(--radius-sm);padding:11px 13px;font-size:12px;line-height:1.5;margin-top:10px}
+.mg{background:#dcfce7;color:#166534}
+.ma{background:#fef3c7;color:#92400e}
+.mr{background:#fee2e2;color:#991b1b}
+.hrow{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);font-size:11px}
+.hrow:last-child{border-bottom:none}
+.hdate{font-weight:600;color:var(--text);min-width:55px}
+.hrdv{flex:1;color:var(--text2);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wa-box{background:#e7f8ee;border-radius:var(--radius-sm);border:1px solid #86efac;padding:14px;font-size:11px;line-height:1.7;color:#14532d;font-family:monospace;white-space:pre-wrap;word-break:break-word;margin-top:10px;max-height:340px;overflow-y:auto}
+.rank-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+.rank-row:last-child{border-bottom:none}
+.rank-n{font-size:13px;font-weight:700;min-width:20px;color:var(--text3)}
+.rank-name{font-size:12px;font-weight:600;flex:1;color:var(--text)}
+.rank-bar-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.rank-bar-fill{height:100%;border-radius:3px}
+.rdv-mini{background:var(--bg2);border-radius:var(--radius-sm);padding:10px 12px;border:1px solid var(--border);margin-bottom:8px}
+.rdv-mini-name{font-size:12px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between}
+.rdv-mini-stats{display:flex;gap:10px;flex-wrap:wrap}
+.rdv-mini-stat{font-size:10px;color:var(--text2)}
+.rdv-mini-stat span{font-weight:600;color:var(--text)}
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--text3)}
+.empty i{font-size:36px;display:block;margin-bottom:8px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg);border-radius:var(--radius) var(--radius) 0 0;padding:20px;width:100%;max-height:80vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:16px}
+.hidden{display:none}
+.cat-accent-blue{border-top:3px solid var(--blue)}
+.cat-accent-green{border-top:3px solid var(--green)}
+.cat-accent-amber{border-top:3px solid var(--gold)}
+.cat-accent-purple{border-top:3px solid var(--purple)}
+.chart-wrap{position:relative;width:100%;height:200px;margin-top:8px}
+.fab{position:fixed;bottom:24px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;border:none;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:50}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<div class="header">
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-name">Reporte Diario EL TIO</div>
+        <div class="brand-sub">Gestión de ventas en campo</div>
+      </div>
+    </div>
+    <button class="user-btn" onclick="openModal('modal-user')">
+      <i class="ti ti-user"></i>
+      <span id="hdr-user">Seleccionar</span>
+    </button>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="goTab('registro')"><i class="ti ti-edit"></i> Registro</button>
+    <button class="tab" onclick="goTab('resultado')"><i class="ti ti-chart-bar"></i> Resultado</button>
+    <button class="tab" onclick="goTab('historial')"><i class="ti ti-calendar"></i> Historial</button>
+    <button class="tab" onclick="goTab('tendencia')"><i class="ti ti-trending-up"></i> Tendencia</button>
+    <button class="tab" onclick="goTab('supervisor')"><i class="ti ti-users"></i> Supervisor</button>
+    <button class="tab" onclick="goTab('whatsapp')"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
+  </div>
+</div>
+
+<!-- ── REGISTRO ─────────────────────────────────────────── -->
+<div class="content" id="tab-registro">
+
+  <div class="sec-label"><i class="ti ti-calendar"></i> Fecha</div>
+  <input type="date" class="inp" id="fecha-sel" style="margin-bottom:14px">
+
+  <div class="sec-label"><i class="ti ti-coin"></i> Cobranza efectiva</div>
+  <div class="card">
+    <div class="g2">
+      <div>
+        <div class="fl">Monto cobrado</div>
+        <div class="urow"><input type="number" class="inp" id="cobranza" placeholder="0" min="0"><span class="unit">Bs</span></div>
+      </div>
+      <div>
+        <div class="fl">Meta diaria</div>
+        <div class="urow"><input type="number" class="inp" id="meta-cob" placeholder="0" min="0"><span class="unit">Bs</span></div>
+      </div>
+    </div>
+    <div class="fl">Clientes cobrados</div>
+    <input type="number" class="inp" id="cli-cob" placeholder="0" min="0">
+    <div class="fl">Novedad de cobranza</div>
+    <input type="text" class="inp" id="obs-cob" placeholder="Ej: 2 clientes con cheque diferido">
+  </div>
+
+  <div class="sec-label"><i class="ti ti-box"></i> Cajas vendidas por categoría</div>
+
+  <div class="card cat-accent-blue" style="margin-bottom:8px">
+    <div class="card-hdr"><i class="ti ti-droplet" style="color:var(--blue)"></i><span class="card-ttl">Leche en polvo</span></div>
+    <div class="col-hdr"><span style="flex:1">SKU</span><span style="width:65px">Cajas</span><span style="width:55px">Meta</span></div>
+    <div class="mrow"><label>400 g</label><input type="number" class="inp-sm" id="l1" placeholder="0" min="0"><input type="number" class="inp-meta" id="ml1" placeholder="meta"></div>
+    <div class="mrow"><label>900 g</label><input type="number" class="inp-sm" id="l2" placeholder="0" min="0"><input type="number" class="inp-meta" id="ml2" placeholder="meta"></div>
+    <div class="mrow"><label>1.8 kg</label><input type="number" class="inp-sm" id="l3" placeholder="0" min="0"><input type="number" class="inp-meta" id="ml3" placeholder="meta"></div>
+    <div class="mrow"><label>4 kg</label><input type="number" class="inp-sm" id="l4" placeholder="0" min="0"><input type="number" class="inp-meta" id="ml4" placeholder="meta"></div>
+  </div>
+
+  <div class="card cat-accent-green" style="margin-bottom:8px">
+    <div class="card-hdr"><i class="ti ti-leaf" style="color:var(--green)"></i><span class="card-ttl">Arroz</span></div>
+    <div class="col-hdr"><span style="flex:1">SKU</span><span style="width:65px">Cajas</span><span style="width:55px">Meta</span></div>
+    <div class="mrow"><label>1 kg</label><input type="number" class="inp-sm" id="a1" placeholder="0" min="0"><input type="number" class="inp-meta" id="ma1" placeholder="meta"></div>
+    <div class="mrow"><label>2 kg</label><input type="number" class="inp-sm" id="a2" placeholder="0" min="0"><input type="number" class="inp-meta" id="ma2" placeholder="meta"></div>
+    <div class="mrow"><label>5 kg</label><input type="number" class="inp-sm" id="a3" placeholder="0" min="0"><input type="number" class="inp-meta" id="ma3" placeholder="meta"></div>
+    <div class="mrow"><label>10 kg</label><input type="number" class="inp-sm" id="a4" placeholder="0" min="0"><input type="number" class="inp-meta" id="ma4" placeholder="meta"></div>
+  </div>
+
+  <div class="card cat-accent-amber" style="margin-bottom:8px">
+    <div class="card-hdr"><i class="ti ti-flask" style="color:var(--gold)"></i><span class="card-ttl">Aceite de soya</span></div>
+    <div class="col-hdr"><span style="flex:1">SKU</span><span style="width:65px">Cajas</span><span style="width:55px">Meta</span></div>
+    <div class="mrow"><label>500 ml</label><input type="number" class="inp-sm" id="ac1" placeholder="0" min="0"><input type="number" class="inp-meta" id="mac1" placeholder="meta"></div>
+    <div class="mrow"><label>1 L</label><input type="number" class="inp-sm" id="ac2" placeholder="0" min="0"><input type="number" class="inp-meta" id="mac2" placeholder="meta"></div>
+    <div class="mrow"><label>2 L</label><input type="number" class="inp-sm" id="ac3" placeholder="0" min="0"><input type="number" class="inp-meta" id="mac3" placeholder="meta"></div>
+    <div class="mrow"><label>5 L</label><input type="number" class="inp-sm" id="ac4" placeholder="0" min="0"><input type="number" class="inp-meta" id="mac4" placeholder="meta"></div>
+  </div>
+
+  <div class="card cat-accent-purple" style="margin-bottom:8px">
+    <div class="card-hdr"><i class="ti ti-package" style="color:var(--purple)"></i><span class="card-ttl">Otros / proveedor</span></div>
+    <div class="col-hdr"><span style="flex:1">SKU</span><span style="width:65px">Cajas</span><span style="width:55px">Meta</span></div>
+    <div class="mrow"><label>SKU 1</label><input type="number" class="inp-sm" id="o1" placeholder="0" min="0"><input type="number" class="inp-meta" id="mo1" placeholder="meta"></div>
+    <div class="mrow"><label>SKU 2</label><input type="number" class="inp-sm" id="o2" placeholder="0" min="0"><input type="number" class="inp-meta" id="mo2" placeholder="meta"></div>
+    <div class="mrow"><label>SKU 3</label><input type="number" class="inp-sm" id="o3" placeholder="0" min="0"><input type="number" class="inp-meta" id="mo3" placeholder="meta"></div>
+    <div class="mrow"><label>SKU 4</label><input type="number" class="inp-sm" id="o4" placeholder="0" min="0"><input type="number" class="inp-meta" id="mo4" placeholder="meta"></div>
+  </div>
+
+  <div class="totbar">
+    <span style="font-size:12px;color:var(--text2)"><i class="ti ti-sum"></i> Total cajas hoy</span>
+    <span style="font-size:16px;font-weight:700" id="tot-cajas">0 cajas</span>
+  </div>
+
+  <div class="sec-label"><i class="ti ti-route"></i> Visitas y pedidos</div>
+  <div class="g4" style="margin-bottom:14px">
+    <div class="metric" style="border-top:3px solid var(--teal)">
+      <div class="metric-lbl">Vis. plan.</div>
+      <input type="number" id="vp" placeholder="0" min="0" style="width:100%;text-align:center;font-size:20px;font-weight:700;border:none;background:transparent;color:var(--text);padding:2px 0">
+    </div>
+    <div class="metric" style="border-top:3px solid var(--blue)">
+      <div class="metric-lbl">Vis. real.</div>
+      <input type="number" id="vr" placeholder="0" min="0" style="width:100%;text-align:center;font-size:20px;font-weight:700;border:none;background:transparent;color:var(--text);padding:2px 0">
+    </div>
+    <div class="metric" style="border-top:3px solid var(--gold)">
+      <div class="metric-lbl">Ped. total</div>
+      <input type="number" id="pt" placeholder="0" min="0" style="width:100%;text-align:center;font-size:20px;font-weight:700;border:none;background:transparent;color:var(--text);padding:2px 0">
+    </div>
+    <div class="metric" style="border-top:3px solid var(--green)">
+      <div class="metric-lbl">Ped. efect.</div>
+      <input type="number" id="pe" placeholder="0" min="0" style="width:100%;text-align:center;font-size:20px;font-weight:700;border:none;background:transparent;color:var(--text);padding:2px 0">
+    </div>
+  </div>
+
+  <div class="sec-label"><i class="ti ti-eye"></i> Visibilidad en PDV</div>
+  <div class="card" style="margin-bottom:8px">
+    <div class="card-hdr"><i class="ti ti-layout-columns" style="color:var(--teal)"></i><span class="card-ttl">Caras en góndola</span></div>
+    <div class="vis-row"><label>Leche (meta ≥5)</label><input type="number" class="inp-sm" id="vis-leche" placeholder="0" min="0"></div>
+    <div class="vis-row"><label>Arroz (meta ≥3)</label><input type="number" class="inp-sm" id="vis-arroz" placeholder="0" min="0"></div>
+    <div class="vis-row"><label>Aceite (meta ≥3)</label><input type="number" class="inp-sm" id="vis-aceite" placeholder="0" min="0"></div>
+  </div>
+  <div class="card">
+    <div class="card-hdr"><i class="ti ti-checkbox" style="color:var(--purple)"></i><span class="card-ttl">Habladores, FIFO y exhibición</span></div>
+    <div class="vis-row"><label>Hablador Leche</label><select class="sel-sm" id="hab-leche"><option value="">—</option><option>SI</option><option>NO</option><option>NA</option></select></div>
+    <div class="vis-row"><label>Hablador Arroz</label><select class="sel-sm" id="hab-arroz"><option value="">—</option><option>SI</option><option>NO</option><option>NA</option></select></div>
+    <div class="vis-row"><label>Hablador Aceite</label><select class="sel-sm" id="hab-aceite"><option value="">—</option><option>SI</option><option>NO</option><option>NA</option></select></div>
+    <div class="vis-row"><label>FIFO verificado</label><select class="sel-sm" id="fifo"><option value="">—</option><option>SI</option><option>NO</option></select></div>
+    <div class="vis-row"><label>Torre / exhibición</label><select class="sel-sm" id="torre"><option value="">—</option><option>SI</option><option>NO</option></select></div>
+    <div class="vis-row"><label>Posición Leche</label><select class="sel-sm" id="pos-leche"><option value="">—</option><option>Vertical</option><option>Horizontal</option></select></div>
+    <div class="vis-row"><label>Posición Arroz</label><select class="sel-sm" id="pos-arroz"><option value="">—</option><option>Vertical</option><option>Horizontal</option></select></div>
+    <div class="vis-row"><label>Ingresó al depósito</label><select class="sel-sm" id="deposito"><option value="">—</option><option>SI</option><option>NO</option></select></div>
+  </div>
+
+  <div class="sec-label"><i class="ti ti-checklist"></i> 10 pasos de la visita</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
+    <div class="chk-grid" id="pasos-wrap"></div>
+  </div>
+
+  <div class="sec-label"><i class="ti ti-message"></i> Cierre del día</div>
+  <div class="card">
+    <div class="fl">PDV más destacado del día</div>
+    <input type="text" class="inp" id="pdv-dest" placeholder="Nombre + logro concreto">
+    <div class="fl" style="margin-top:10px">Observaciones generales</div>
+    <textarea class="obs" id="obs-gen" placeholder="Dificultades, oportunidades, novedades..."></textarea>
+    <div class="fl" style="margin-top:10px">Compromiso para mañana</div>
+    <input type="text" class="inp" id="compromiso" placeholder="¿Qué harás diferente mañana?">
+  </div>
+
+  <button class="btn btn-blue" onclick="calcular()"><i class="ti ti-device-floppy"></i> Guardar y ver mi resultado</button>
+  <div style="height:24px"></div>
+</div>
+
+<!-- ── RESULTADO ─────────────────────────────────────────── -->
+<div class="content hidden" id="tab-resultado">
+  <div class="score-wrap">
+    <div style="font-size:11px;color:rgba(255,255,255,.7);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em">Puntuación del día</div>
+    <div class="score-num" id="r-score">—</div>
+    <div class="score-lbl" id="r-nivel">—</div>
+    <div class="score-bar-track"><div class="score-bar-fill" id="r-bar" style="width:0%"></div></div>
+    <div style="font-size:11px;color:rgba(255,255,255,.6)" id="r-rdv-fecha">—</div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric"><div class="metric-lbl">Leche</div><div class="metric-val" id="r-leche">—</div><div class="metric-sub">cajas</div></div>
+    <div class="metric"><div class="metric-lbl">Arroz</div><div class="metric-val" id="r-arroz">—</div><div class="metric-sub">cajas</div></div>
+    <div class="metric"><div class="metric-lbl">Aceite</div><div class="metric-val" id="r-aceite">—</div><div class="metric-sub">cajas</div></div>
+    <div class="metric"><div class="metric-lbl">Otros</div><div class="metric-val" id="r-otros">—</div><div class="metric-sub">cajas</div></div>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="sec-label" style="margin-top:0">Indicadores</div>
+    <div id="r-kpis"></div>
+    <div id="r-msg" class="msg ma" style="display:none"></div>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="sec-label" style="margin-top:0">Visibilidad</div>
+    <div id="r-vis"></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:8px">
+    <button class="btn-sm btn-sm-blue" style="flex:1" onclick="goTab('whatsapp')"><i class="ti ti-brand-whatsapp"></i> Enviar WhatsApp</button>
+    <button class="btn-sm btn-sm-out" style="flex:1" onclick="goTab('registro')"><i class="ti ti-edit"></i> Nuevo registro</button>
+  </div>
+  <div style="height:24px"></div>
+</div>
+
+<!-- ── HISTORIAL ─────────────────────────────────────────── -->
+<div class="content hidden" id="tab-historial">
+  <div class="metric-grid" style="margin-bottom:14px">
+    <div class="metric"><div class="metric-lbl">Score prom.</div><div class="metric-val" id="h-avg">—</div></div>
+    <div class="metric"><div class="metric-lbl">Total cajas</div><div class="metric-val" id="h-cajas">—</div></div>
+    <div class="metric"><div class="metric-lbl">Efectividad</div><div class="metric-val" id="h-ef">—</div></div>
+    <div class="metric"><div class="metric-lbl">Días report.</div><div class="metric-val" id="h-dias">—</div></div>
+  </div>
+  <div class="card">
+    <div class="sec-label" style="margin-top:0">Reportes guardados</div>
+    <div id="h-list"><div class="empty"><i class="ti ti-calendar"></i>Sin reportes aún</div></div>
+  </div>
+  <div style="height:24px"></div>
+</div>
+
+<!-- ── TENDENCIA ─────────────────────────────────────────── -->
+<div class="content hidden" id="tab-tendencia">
+  <div class="metric-grid" style="margin-bottom:14px">
+    <div class="metric"><div class="metric-lbl">Mejor día</div><div class="metric-val" id="t-best">—</div></div>
+    <div class="metric"><div class="metric-lbl">Tendencia</div><div class="metric-val" id="t-trend">—</div></div>
+    <div class="metric"><div class="metric-lbl">Cat. líder</div><div class="metric-val" id="t-cat">—</div></div>
+    <div class="metric"><div class="metric-lbl">% vs meta</div><div class="metric-val" id="t-meta">—</div></div>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="sec-label" style="margin-top:0">Score diario</div>
+    <div class="chart-wrap"><canvas id="chart-score" role="img" aria-label="Score diario últimos 7 reportes">Gráfico de score diario.</canvas></div>
+  </div>
+  <div class="card">
+    <div class="sec-label" style="margin-top:0">Cajas por categoría</div>
+    <div class="chart-wrap"><canvas id="chart-cajas" role="img" aria-label="Cajas acumuladas por categoría">Gráfico de cajas por categoría.</canvas></div>
+  </div>
+  <div style="height:24px"></div>
+</div>
+
+<!-- ── SUPERVISOR ─────────────────────────────────────────── -->
+<div class="content hidden" id="tab-supervisor">
+  <div class="metric-grid" style="margin-bottom:14px">
+    <div class="metric"><div class="metric-lbl">Cajas equipo</div><div class="metric-val" id="sup-cajas">—</div></div>
+    <div class="metric"><div class="metric-lbl">Cobranza</div><div class="metric-val" id="sup-cob">—</div></div>
+    <div class="metric"><div class="metric-lbl">Ef. pedidos</div><div class="metric-val" id="sup-ef">—</div></div>
+    <div class="metric"><div class="metric-lbl">Con reporte</div><div class="metric-val" id="sup-cnt">—</div></div>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="sec-label" style="margin-top:0">Ranking del día</div>
+    <div id="sup-ranking"><div class="empty"><i class="ti ti-users"></i>Sin datos del equipo</div></div>
+  </div>
+  <div id="sup-cards"></div>
+  <div style="height:24px"></div>
+</div>
+
+<!-- ── WHATSAPP ─────────────────────────────────────────── -->
+<div class="content hidden" id="tab-whatsapp">
+  <div class="card" style="margin-bottom:10px">
+    <div class="sec-label" style="margin-top:0"><i class="ti ti-brand-whatsapp" style="color:#25D366"></i> Mi reporte del día</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Copia y pega en el grupo del equipo EL TIO</div>
+    <div class="wa-box" id="wa-text">Guarda un reporte primero para generar el resumen.</div>
+    <button class="btn btn-green" style="margin-top:10px" onclick="copiarWA('wa-text')"><i class="ti ti-copy"></i> Copiar mi reporte</button>
+  </div>
+  <div class="card">
+    <div class="sec-label" style="margin-top:0"><i class="ti ti-users"></i> Resumen supervisor</div>
+    <div class="wa-box" id="wa-sup">Sin datos del equipo.</div>
+    <button class="btn btn-outline" style="margin-top:10px" onclick="copiarWA('wa-sup')"><i class="ti ti-copy"></i> Copiar resumen equipo</button>
+  </div>
+  <div style="height:24px"></div>
+</div>
+
+</div>
+
+<!-- ── MODAL USUARIO ─────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-user" onclick="if(event.target===this)closeModal('modal-user')">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-user"></i> Selecciona tu nombre</div>
+    <div id="rdv-list"></div>
+    <button class="btn btn-outline" style="margin-top:10px" onclick="closeModal('modal-user')">Cancelar</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const RDVS=['Maria Dubuc','Maigledy Petit','Franklin Gotera','Isaac Quintero','Andres Gonzalez','Alejandro Arteaga','Hugo Hidalgo','Edwart Soto'];
+const PASOS=["1. Planificación de ruta","2. Acercamiento al cliente","3. Chequeo de stock / FIFO","4. Presentación del portafolio","5. Cierre del pedido","6. Cobro de facturas","7. Re-venta / cross-selling","8. Anotación de la visita","9. Análisis del PDV","10. Próximos pasos acordados"];
+const KEY='eltio_v2';
+let reportes=[], currentRDV='', charts={};
+
+function load(){try{const d=localStorage.getItem(KEY);if(d)reportes=JSON.parse(d);}catch(e){reportes=[];}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(reportes));}catch(e){}}
+
+function g(id){return parseFloat(document.getElementById(id)?.value)||0;}
+function gi(id){return parseInt(document.getElementById(id)?.value)||0;}
+function gv(id){return document.getElementById(id)?.value||'';}
+
+function today(){return new Date().toISOString().split('T')[0];}
+
+function buildPasos(){
+  document.getElementById('pasos-wrap').innerHTML=PASOS.map((p,i)=>
+    `<label class="chk-lbl"><input type="checkbox" id="p${i}"> ${p}</label>`
+  ).join('');
+}
+
+function buildRDVList(){
+  document.getElementById('rdv-list').innerHTML=RDVS.map(r=>
+    `<button onclick="selectRDV('${r}')" style="width:100%;text-align:left;padding:13px 14px;margin-bottom:6px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg2);font-size:14px;cursor:pointer;color:var(--text);${currentRDV===r?'border-color:var(--blue);background:var(--bg);font-weight:600':''}">
+      <i class="ti ti-user" style="margin-right:8px;color:var(--blue)"></i>${r}
+    </button>`
+  ).join('');
+}
+
+function selectRDV(name){
+  currentRDV=name;
+  document.getElementById('hdr-user').textContent=name.split(' ')[0];
+  localStorage.setItem('eltio_rdv',name);
+  closeModal('modal-user');
+  renderHistorial();
+  renderTendencia();
+}
+
+function openModal(id){
+  if(id==='modal-user') buildRDVList();
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+function updTotal(){
+  const ids=['l1','l2','l3','l4','a1','a2','a3','a4','ac1','ac2','ac3','ac4','o1','o2','o3','o4'];
+  const t=ids.reduce((s,id)=>s+g(id),0);
+  document.getElementById('tot-cajas').textContent=Math.round(t)+' cajas';
+}
+
+function calcScore(d){
+  const pCob=d.metaCob>0?Math.min(d.cobranza/d.metaCob,1):(d.cobranza>0?0.7:0);
+  const pVis=d.vp>0?Math.min(d.vr/d.vp,1):(d.vr>0?0.7:0);
+  const pPed=d.pt>0?Math.min(d.pe/d.pt,1):(d.pe>0?0.7:0);
+  const cats=[d.leche,d.arroz,d.aceite,d.otros].filter(v=>v>0).length;
+  const pMix=cats/4;
+  const pPasos=d.pasos/10;
+  const vL=d.visLeche>=5?1:d.visLeche/5;
+  const vA=d.visArroz>=3?1:d.visArroz/3;
+  const vAc=d.visAceite>=3?1:d.visAceite/3;
+  const pVis2=(vL+vA+vAc)/3;
+  return Math.round(pCob*22+pVis*18+pPed*22+pMix*13+pPasos*13+pVis2*12);
+}
+
+function calcular(){
+  if(!currentRDV){openModal('modal-user');return;}
+  const leche=[g('l1'),g('l2'),g('l3'),g('l4')].reduce((s,v)=>s+v,0);
+  const arroz=[g('a1'),g('a2'),g('a3'),g('a4')].reduce((s,v)=>s+v,0);
+  const aceite=[g('ac1'),g('ac2'),g('ac3'),g('ac4')].reduce((s,v)=>s+v,0);
+  const otros=[g('o1'),g('o2'),g('o3'),g('o4')].reduce((s,v)=>s+v,0);
+  const metaL=[g('ml1'),g('ml2'),g('ml3'),g('ml4')].reduce((s,v)=>s+v,0);
+  const metaA=[g('ma1'),g('ma2'),g('ma3'),g('ma4')].reduce((s,v)=>s+v,0);
+  const metaAc=[g('mac1'),g('mac2'),g('mac3'),g('mac4')].reduce((s,v)=>s+v,0);
+  const pasos=PASOS.filter((_,i)=>document.getElementById('p'+i)?.checked).length;
+  const d={
+    rdv:currentRDV, fecha:gv('fecha-sel')||today(),
+    cobranza:g('cobranza'), metaCob:g('meta-cob'), cliCob:gi('cli-cob'), obsCob:gv('obs-cob'),
+    leche:Math.round(leche), arroz:Math.round(arroz), aceite:Math.round(aceite), otros:Math.round(otros),
+    metaLeche:Math.round(metaL), metaArroz:Math.round(metaA), metaAceite:Math.round(metaAc),
+    totalCajas:Math.round(leche+arroz+aceite+otros),
+    vp:gi('vp'), vr:gi('vr'), pt:gi('pt'), pe:gi('pe'), pasos,
+    visLeche:g('vis-leche'), visArroz:g('vis-arroz'), visAceite:g('vis-aceite'),
+    habLeche:gv('hab-leche'), habArroz:gv('hab-arroz'), habAceite:gv('hab-aceite'),
+    fifo:gv('fifo'), torre:gv('torre'), posLeche:gv('pos-leche'), posArroz:gv('pos-arroz'), deposito:gv('deposito'),
+    pdvDest:gv('pdv-dest'), obsGen:gv('obs-gen'), compromiso:gv('compromiso'), ts:Date.now()
+  };
+  d.score=calcScore(d);
+  reportes=reportes.filter(r=>!(r.rdv===d.rdv&&r.fecha===d.fecha));
+  reportes.unshift(d);
+  save();
+  renderResultado(d);
+  renderHistorial();
+  renderWA(d);
+  renderWASup();
+  renderSupervisor();
+  goTab('resultado');
+}
+
+function renderResultado(d){
+  const col=d.score>=80?'#16A34A':d.score>=60?'#D97706':'#DC2626';
+  const nivel=d.score>=90?'Excelente gestión':d.score>=80?'Muy buena gestión':d.score>=60?'En desarrollo':'Necesita mejorar';
+  const msg=d.score>=80?'Gran trabajo hoy. Mantén el nivel y supera tus cajas mañana.':d.score>=60?'Buen avance. Enfócate en pedidos efectivos y visibilidad.':'Día difícil. Revisa planificación y aplica los 10 pasos.';
+  document.getElementById('r-score').textContent=d.score;
+  document.getElementById('r-nivel').textContent=nivel;
+  document.getElementById('r-rdv-fecha').textContent=d.rdv+' · '+d.fecha;
+  document.getElementById('r-bar').style.width=d.score+'%';
+  document.getElementById('r-bar').style.background=col;
+  document.getElementById('r-leche').textContent=d.leche;
+  document.getElementById('r-arroz').textContent=d.arroz;
+  document.getElementById('r-aceite').textContent=d.aceite;
+  document.getElementById('r-otros').textContent=d.otros;
+  const pCob=d.metaCob>0?Math.round(d.cobranza/d.metaCob*100):null;
+  const pVis=d.vp>0?Math.round(d.vr/d.vp*100):null;
+  const pPed=d.pt>0?Math.round(d.pe/d.pt*100):null;
+  const cats=[d.leche,d.arroz,d.aceite,d.otros].filter(v=>v>0).length;
+  const kpis=[
+    {n:'Cobranza efectiva',v:pCob!=null?pCob+'%':'Sin meta',det:`${Math.round(d.cobranza).toLocaleString()} / ${Math.round(d.metaCob).toLocaleString()} Bs`,ok:pCob==null?null:pCob>=80},
+    {n:'Pedidos efectivos',v:pPed!=null?pPed+'%':'—',det:`${d.pe} efectivos de ${d.pt} totales`,ok:pPed==null?null:pPed>=70},
+    {n:'Visitas realizadas',v:pVis!=null?pVis+'%':'—',det:`${d.vr} de ${d.vp} planificadas`,ok:pVis==null?null:pVis>=80},
+    {n:'Mix de categorías',v:`${cats}/4`,det:'categorías con venta hoy',ok:cats>=3},
+    {n:'10 pasos aplicados',v:`${d.pasos}/10`,det:'pasos marcados como realizados',ok:d.pasos>=8},
+  ];
+  document.getElementById('r-kpis').innerHTML=kpis.map(k=>`
+    <div class="krow">
+      <div><div class="kname">${k.n}</div><div class="kdet">${k.det}</div></div>
+      <div style="display:flex;align-items:center;flex-shrink:0">
+        <span class="kval">${k.v}</span>
+        ${k.ok===null?'':`<span class="pill ${k.ok?'pg':'pr'}">${k.ok?'OK':'Atención'}</span>`}
+      </div>
+    </div>`).join('');
+  const msgEl=document.getElementById('r-msg');
+  msgEl.textContent=msg; msgEl.className='msg '+(d.score>=80?'mg':d.score>=60?'ma':'mr'); msgEl.style.display='block';
+  document.getElementById('r-vis').innerHTML=`
+    <div class="krow"><span class="kname">Caras Leche</span><span class="kval">${d.visLeche} <span class="pill ${d.visLeche>=5?'pg':'pr'}">meta 5</span></span></div>
+    <div class="krow"><span class="kname">Caras Arroz</span><span class="kval">${d.visArroz} <span class="pill ${d.visArroz>=3?'pg':'pr'}">meta 3</span></span></div>
+    <div class="krow"><span class="kname">Caras Aceite</span><span class="kval">${d.visAceite} <span class="pill ${d.visAceite>=3?'pg':'pr'}">meta 3</span></span></div>
+    <div class="krow"><span class="kname">Habladores</span><span class="kval">L:${d.habLeche||'—'} Ar:${d.habArroz||'—'} Ac:${d.habAceite||'—'}</span></div>
+    <div class="krow"><span class="kname">FIFO verificado</span><span class="kval ${d.fifo==='SI'?'pg':'pr'}">${d.fifo||'—'}</span></div>
+    <div class="krow"><span class="kname">Torre / exhibición</span><span class="kval">${d.torre||'—'}</span></div>
+    <div class="krow"><span class="kname">Ingresó al depósito</span><span class="kval ${d.deposito==='SI'?'pg':'pr'}">${d.deposito||'—'}</span></div>`;
+}
+
+function renderHistorial(){
+  const mine=currentRDV?reportes.filter(r=>r.rdv===currentRDV):reportes;
+  if(!mine.length){document.getElementById('h-list').innerHTML='<div class="empty"><i class="ti ti-calendar"></i>Sin reportes aún</div>';return;}
+  document.getElementById('h-list').innerHTML=mine.slice(0,20).map(r=>{
+    const ef=r.pt>0?Math.round(r.pe/r.pt*100)+'%':'—';
+    const cls=r.score>=80?'pg':r.score>=60?'pa':'pr';
+    return `<div class="hrow">
+      <span class="hdate">${r.fecha.slice(5)}</span>
+      <span class="hrdv">${r.rdv}</span>
+      <span style="font-size:11px;color:var(--text3)">${r.totalCajas}cj</span>
+      <span style="margin:0 4px;font-size:11px;color:var(--text3)">${r.vr}/${r.vp}v</span>
+      <span class="pill ${cls}">${r.score}</span>
+    </div>`;
+  }).join('');
+  const avg=Math.round(mine.reduce((s,r)=>s+r.score,0)/mine.length);
+  const totC=mine.reduce((s,r)=>s+r.totalCajas,0);
+  const efArr=mine.filter(r=>r.pt>0);
+  document.getElementById('h-avg').textContent=avg;
+  document.getElementById('h-cajas').textContent=totC;
+  document.getElementById('h-ef').textContent=efArr.length?Math.round(efArr.reduce((s,r)=>s+r.pe/r.pt*100,0)/efArr.length)+'%':'—';
+  document.getElementById('h-dias').textContent=mine.length;
+}
+
+function renderTendencia(){
+  const mine=(currentRDV?reportes.filter(r=>r.rdv===currentRDV):reportes).slice(0,7).reverse();
+  const n=mine.length;
+  if(!n){return;}
+  const best=Math.max(...mine.map(r=>r.score));
+  document.getElementById('t-best').textContent=best+'pts';
+  if(n>=2){const d=mine[n-1].score-mine[0].score;document.getElementById('t-trend').textContent=(d>=0?'+':'')+d+'pts';}
+  const totL=mine.reduce((s,r)=>s+r.leche,0),totA=mine.reduce((s,r)=>s+r.arroz,0),totAc=mine.reduce((s,r)=>s+r.aceite,0),totO=mine.reduce((s,r)=>s+r.otros,0);
+  const maxC=Math.max(totL,totA,totAc,totO);
+  document.getElementById('t-cat').textContent=['Leche','Arroz','Aceite','Otros'][[totL,totA,totAc,totO].indexOf(maxC)];
+  const totMeta=mine.reduce((s,r)=>s+(r.metaLeche||0)+(r.metaArroz||0)+(r.metaAceite||0),0);
+  document.getElementById('t-meta').textContent=totMeta>0?Math.round(mine.reduce((s,r)=>s+r.totalCajas,0)/totMeta*100)+'%':'—';
+  if(charts.score)charts.score.destroy();
+  if(charts.cajas)charts.cajas.destroy();
+  charts.score=new Chart(document.getElementById('chart-score'),{type:'line',data:{labels:mine.map(r=>r.fecha.slice(5)),datasets:[{label:'Score',data:mine.map(r=>r.score),borderColor:'#1D5FA6',backgroundColor:'#E6F1FB88',fill:true,tension:.3,pointRadius:5,pointBackgroundColor:'#1D5FA6'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100}}}});
+  charts.cajas=new Chart(document.getElementById('chart-cajas'),{type:'bar',data:{labels:['Leche','Arroz','Aceite','Otros'],datasets:[{label:'Vendido',data:[totL,totA,totAc,totO],backgroundColor:['#1D5FA6','#16A34A','#D97706','#7C3AED']},{label:'Meta',data:[mine.reduce((s,r)=>s+(r.metaLeche||0),0),mine.reduce((s,r)=>s+(r.metaArroz||0),0),mine.reduce((s,r)=>s+(r.metaAceite||0),0),0],backgroundColor:'rgba(0,0,0,0.08)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+}
+
+function renderSupervisor(){
+  const latest=RDVS.map(name=>{
+    const r=reportes.filter(x=>x.rdv===name).sort((a,b)=>b.ts-a.ts)[0];
+    return r||{rdv:name,score:0,totalCajas:0,cobranza:0,pe:0,pt:0,vr:0,vp:0,fifo:'',fecha:'—',ts:0};
+  }).sort((a,b)=>b.score-a.score);
+  document.getElementById('sup-ranking').innerHTML=latest.map((r,i)=>{
+    const col=r.score>=80?'#16A34A':r.score>=60?'#D97706':'#DC2626';
+    return `<div class="rank-row">
+      <span class="rank-n">${i+1}</span>
+      <span class="rank-name">${r.rdv.split(' ')[0]}</span>
+      <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${r.score}%;background:${col}"></div></div>
+      <span style="font-size:13px;font-weight:700;color:${col};min-width:30px;text-align:right">${r.score}</span>
+    </div>`;
+  }).join('');
+  const wd=latest.filter(r=>r.totalCajas>0||r.cobranza>0);
+  document.getElementById('sup-cajas').textContent=wd.reduce((s,r)=>s+r.totalCajas,0);
+  document.getElementById('sup-cob').textContent=wd.reduce((s,r)=>s+r.cobranza,0).toLocaleString();
+  const ef=wd.filter(r=>r.pt>0);
+  document.getElementById('sup-ef').textContent=ef.length?Math.round(ef.reduce((s,r)=>s+r.pe/r.pt*100,0)/ef.length)+'%':'—';
+  document.getElementById('sup-cnt').textContent=wd.length+'/8';
+  document.getElementById('sup-cards').innerHTML=latest.map(r=>{
+    const ef2=r.pt>0?Math.round(r.pe/r.pt*100)+'%':'—';
+    const cls=r.score>=80?'pg':r.score>=60?'pa':'pr';
+    return `<div class="rdv-mini">
+      <div class="rdv-mini-name">${r.rdv} <span class="pill ${cls}">${r.score}pts</span></div>
+      <div class="rdv-mini-stats">
+        <span class="rdv-mini-stat">Cajas:<span>${r.totalCajas}</span></span>
+        <span class="rdv-mini-stat">Cobr:<span>${Math.round(r.cobranza).toLocaleString()}</span></span>
+        <span class="rdv-mini-stat">Ef:<span>${ef2}</span></span>
+        <span class="rdv-mini-stat">Vis:<span>${r.vr}/${r.vp}</span></span>
+        <span class="rdv-mini-stat">FIFO:<span>${r.fifo||'—'}</span></span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderWA(d){
+  const ef=d.pt>0?Math.round(d.pe/d.pt*100):0;
+  const cats=[d.leche>0?'Leche:'+d.leche:'',d.arroz>0?'Arroz:'+d.arroz:'',d.aceite>0?'Aceite:'+d.aceite:'',d.otros>0?'Otros:'+d.otros:''].filter(Boolean).join(' | ');
+  const em=d.score>=80?'✅':d.score>=60?'⚠️':'🔴';
+  document.getElementById('wa-text').textContent=`📊 *REPORTE DIARIO EL TIO*
+📅 ${d.fecha}  |  👤 ${d.rdv}
+
+${em} *Score del día: ${d.score}/100*
+
+💰 Cobranza: ${Math.round(d.cobranza).toLocaleString()} Bs${d.metaCob>0?' (meta: '+Math.round(d.metaCob).toLocaleString()+' Bs)':''}
+📦 Cajas vendidas: ${d.totalCajas}
+   ${cats||'Sin ventas registradas'}
+📋 Pedidos: ${d.pe}/${d.pt} efectivos (${ef}%)
+🚶 Visitas: ${d.vr}/${d.vp} realizadas
+✅ Pasos aplicados: ${d.pasos}/10
+
+👁️ Visibilidad:
+   Caras: Leche ${d.visLeche} | Arroz ${d.visArroz} | Aceite ${d.visAceite}
+   FIFO: ${d.fifo||'—'} | Depósito: ${d.deposito||'—'}
+   Habladores: L:${d.habLeche||'—'} A:${d.habArroz||'—'} Ac:${d.habAceite||'—'}
+${d.pdvDest?'\n🏪 PDV destacado: '+d.pdvDest:''}
+${d.compromiso?'\n💪 Compromiso mañana: '+d.compromiso:''}
+
+#ELTIOhoy`.trim();
+}
+
+function renderWASup(){
+  const latest=RDVS.map(name=>reportes.filter(x=>x.rdv===name).sort((a,b)=>b.ts-a.ts)[0]).filter(Boolean);
+  if(!latest.length){document.getElementById('wa-sup').textContent='Sin reportes del equipo.';return;}
+  const totC=latest.reduce((s,r)=>s+r.totalCajas,0);
+  const totCob=latest.reduce((s,r)=>s+r.cobranza,0);
+  const avgS=Math.round(latest.reduce((s,r)=>s+r.score,0)/latest.length);
+  const sorted=[...latest].sort((a,b)=>b.score-a.score);
+  document.getElementById('wa-sup').textContent=`📊 *RESUMEN SUPERVISOR EL TIO*
+📅 ${today()}
+
+👥 ${latest.length}/8 RDVs con reporte
+📦 Cajas equipo: ${totC}
+💰 Cobranza: ${Math.round(totCob).toLocaleString()} Bs
+⭐ Score promedio: ${avgS}/100
+
+🏆 *Ranking:*
+${sorted.map(r=>`  ${r.score>=80?'✅':r.score>=60?'⚠️':'🔴'} ${r.rdv}: ${r.score}pts | ${r.totalCajas}cj | Ef:${r.pt>0?Math.round(r.pe/r.pt*100)+'%':'—'}`).join('\n')}
+
+#ELTIO #EquipoVentas`.trim();
+}
+
+function copiarWA(id){
+  const t=document.getElementById(id).textContent;
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>{alert('¡Copiado! Pégalo en WhatsApp.');}).catch(()=>{});}
+  else{const el=document.createElement('textarea');el.value=t;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);alert('¡Copiado!');}
+}
+
+function goTab(id){
+  ['registro','resultado','historial','tendencia','supervisor','whatsapp'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('hidden',t!==id);
+  });
+  document.querySelectorAll('.tab').forEach((el,i)=>{
+    el.classList.toggle('on',['registro','resultado','historial','tendencia','supervisor','whatsapp'][i]===id);
+  });
+  if(id==='tendencia')setTimeout(renderTendencia,120);
+  if(id==='historial')renderHistorial();
+  if(id==='supervisor')renderSupervisor();
+  if(id==='whatsapp')renderWASup();
+}
+
+document.querySelectorAll('input[type=number]').forEach(el=>el.addEventListener('input',updTotal));
+buildPasos();
+load();
+const savedRDV=localStorage.getItem('eltio_rdv');
+if(savedRDV&&RDVS.includes(savedRDV)){currentRDV=savedRDV;document.getElementById('hdr-user').textContent=savedRDV.split(' ')[0];}
+document.getElementById('fecha-sel').value=today();
+renderHistorial();
+renderSupervisor();
+renderWASup();
+</script>
+</body>
+</html>
